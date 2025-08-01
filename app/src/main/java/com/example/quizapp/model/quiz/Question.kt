@@ -24,8 +24,8 @@ class Question {
             return isCorrect
         }
 
-    fun answer(_answer: String) {
-        if (_answer.equals(correct)) {
+    fun answer(_answer: Int) {
+        if (variants[_answer].equals(correct)) {
             isCorrect = true
         }
     }

@@ -46,6 +46,7 @@ import com.example.quizapp.presenter.*
 lateinit var startQuiz: () -> Unit
 lateinit var startLoad: () -> Unit
 lateinit var startHello: () -> Unit
+lateinit var startEnd: () -> Unit
 
 @Composable
 fun MainScreen(navController: NavController) {
@@ -59,6 +60,9 @@ fun MainScreen(navController: NavController) {
     }
     startLoad = {
         status = ScreenStatus.LOAD
+    }
+    startEnd = {
+        status = ScreenStatus.END
     }
 
     Column(
@@ -75,6 +79,8 @@ fun MainScreen(navController: NavController) {
             HelloScreen()
         } else if (status == ScreenStatus.LOAD) {
             LoadScreen()
+        } else if (status == ScreenStatus.END) {
+            EndScreen()
         }
     }
 }
@@ -185,7 +191,7 @@ private fun QuizScreen() {
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
-            val state = remember { mutableStateOf(true) }
+            val state = remember { mutableStateOf(-1) }
             Column(
                 Modifier.selectableGroup(),
                 horizontalAlignment = Alignment.Start
@@ -193,42 +199,53 @@ private fun QuizScreen() {
             {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = false,
-                        onClick = { state.value = false }
+                        selected = state.value == 0,
+                        onClick = { state.value = 0 }
                     )
                     Text(current_quiz.getQuestion(question_number).getVariant(0))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = false,
-                        onClick = { state.value = false }
+                        selected = state.value == 1,
+                        onClick = { state.value = 1 }
                     )
                     Text(current_quiz.getQuestion(question_number).getVariant(1))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = false,
-                        onClick = { state.value = false }
+                        selected = state.value == 2,
+                        onClick = { state.value = 2 }
                     )
                     Text(current_quiz.getQuestion(question_number).getVariant(2))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = false,
-                        onClick = { state.value = false }
+                        selected = state.value == 3,
+                        onClick = { state.value = 3 }
                     )
                     Text(current_quiz.getQuestion(question_number).getVariant(3))
                 }
             }
             if (question_number != 3) {
                 Button(
-                    onClick = { question_number += 1 },
+                    onClick = {
+                        if (state.value >= 0 && state.value <= 3) {
+                            current_quiz.getQuestion(question_number).answer(state.value)
+                            question_number += 1
+                            state.value = -1
+                        }
+                    },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
                     Text("Далее")
                 }
             } else {
-                Button(onClick = {}, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                Button(onClick = {
+                    if (state.value >= 0 && state.value <= 3) {
+                        current_quiz.getQuestion(question_number).answer(state.value)
+                        startEnd()
+                    }
+                }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                     Text("Завершить")
                 }
             }
