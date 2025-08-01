@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,9 +42,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 
+enum class ScreenStatus {
+    HELLO, QUIZ, END
+}
+
 @Composable
 fun MainScreen(navController: NavController) {
-    var isQuizScreenVisible by remember { mutableStateOf(false) }
+    var status by remember { mutableStateOf(ScreenStatus.HELLO) }
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -52,18 +58,16 @@ fun MainScreen(navController: NavController) {
             .background(com.example.quizapp.view.theme.Purple)
             .padding(25.dp)
     ) {
-        //QuizScreen()
-        if (isQuizScreenVisible) {
-            QuizScreen(onBack = { isQuizScreenVisible = false })
+        if (status == ScreenStatus.QUIZ) {
+            QuizScreen(startHello = { status = ScreenStatus.HELLO })
         } else {
-            HelloScreen(onStartQuiz = { isQuizScreenVisible = true })
+            HelloScreen(onStartQuiz = { status = ScreenStatus.QUIZ })
         }
     }
 }
 
-@Preview
 @Composable
-private fun EndScreen() {
+private fun EndScreen(startHello: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -77,30 +81,30 @@ private fun EndScreen() {
         ) {
             Row {
                 Icon(
-                    imageVector = ImageVector.vectorResource(id = com.example.quizapp.R.drawable.arrow_back_icon),
+                    imageVector = ImageVector.vectorResource(id = com.example.quizapp.R.drawable.inactive_star),
                     contentDescription = "Back"
                 )
                 Icon(
-                    imageVector = ImageVector.vectorResource(id = com.example.quizapp.R.drawable.arrow_back_icon),
+                    imageVector = ImageVector.vectorResource(id = com.example.quizapp.R.drawable.inactive_star),
                     contentDescription = "Back"
                 )
                 Icon(
-                    imageVector = ImageVector.vectorResource(id = com.example.quizapp.R.drawable.arrow_back_icon),
+                    imageVector = ImageVector.vectorResource(id = com.example.quizapp.R.drawable.inactive_star),
                     contentDescription = "Back"
                 )
                 Icon(
-                    imageVector = ImageVector.vectorResource(id = com.example.quizapp.R.drawable.arrow_back_icon),
+                    imageVector = ImageVector.vectorResource(id = com.example.quizapp.R.drawable.inactive_star),
                     contentDescription = "Back"
                 )
                 Icon(
-                    imageVector = ImageVector.vectorResource(id = com.example.quizapp.R.drawable.arrow_back_icon),
+                    imageVector = ImageVector.vectorResource(id = com.example.quizapp.R.drawable.inactive_star),
                     contentDescription = "Back"
                 )
             }
-            Text ("4 из 5")
-            Text ("Почти идеально")
-            Text ("Описание")
-            Button(onClick = {}) {
+            Text("4 из 5")
+            Text("Почти идеально")
+            Text("Описание")
+            Button(onClick = startHello) {
                 Text("Начать заново")
             }
         }
@@ -109,18 +113,17 @@ private fun EndScreen() {
 
 
 @Composable
-private fun QuizScreen(onBack: () -> Unit) {
+private fun QuizScreen(startHello: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.padding(10.dp)
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
             IconButton(
-                onClick = onBack
+                onClick = startHello
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = com.example.quizapp.R.drawable.arrow_back_icon),
@@ -131,28 +134,66 @@ private fun QuizScreen(onBack: () -> Unit) {
             Text(
                 text = "DAILY QUIZ",
                 color = com.example.quizapp.view.theme.White,
-                fontSize = 50.sp,
+                fontSize = 40.sp,
                 fontWeight = FontWeight.Black,
             )
         }
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween,
+            verticalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
                 .background(Color.White)
                 .wrapContentHeight()
                 .fillMaxWidth()
                 .weight(2f)
         ) {
-            Text("Вопрос")
-            Text("Как переводится")
-            Column {
-                Text("Вопрос")
-                Text("Вопрос")
-                Text("Вопрос")
-                Text("Вопрос")
+            Text(
+                "Вопрос",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Start),
+                textAlign = TextAlign.Center
+            )
+            Text(
+                "Как переводится",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+            val state = remember { mutableStateOf(true) }
+            Column(
+                Modifier.selectableGroup(),
+                horizontalAlignment = Alignment.Start
+            )
+            {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(
+                        selected = false,
+                        onClick = { state.value = false }
+                    )
+                    Text("Btn1")
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(
+                        selected = false,
+                        onClick = { state.value = false }
+                    )
+                    Text("Btn2")
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(
+                        selected = false,
+                        onClick = { state.value = false }
+                    )
+                    Text("Btn3")
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(
+                        selected = false,
+                        onClick = { state.value = false }
+                    )
+                    Text("Btn4")
+                }
             }
-            Button(onClick = {}) {
+            Button(onClick = {}, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text("Далее")
             }
         }
