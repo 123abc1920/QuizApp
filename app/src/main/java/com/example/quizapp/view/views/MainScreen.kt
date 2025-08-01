@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.quizapp.presenter.*
 //https://opentdb.com/api.php?amount=5&type=multiple
 enum class ScreenStatus {
     HELLO, QUIZ, END
@@ -114,6 +115,7 @@ private fun EndScreen(startHello: () -> Unit) {
 
 @Composable
 private fun QuizScreen(startHello: () -> Unit) {
+    getQuizBody()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
