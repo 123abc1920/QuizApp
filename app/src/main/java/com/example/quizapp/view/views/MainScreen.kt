@@ -137,6 +137,8 @@ private fun LoadScreen() {
 
 @Composable
 private fun QuizScreen() {
+    var question_number by remember { mutableStateOf(0) }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
@@ -179,7 +181,7 @@ private fun QuizScreen() {
                 textAlign = TextAlign.Center
             )
             Text(
-                current_quiz.getCurrentQuestion().getQuestion(),
+                current_quiz.getQuestion(question_number).getQuestion(),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
@@ -194,32 +196,41 @@ private fun QuizScreen() {
                         selected = false,
                         onClick = { state.value = false }
                     )
-                    Text(current_quiz.getCurrentQuestion().getVariant(0))
+                    Text(current_quiz.getQuestion(question_number).getVariant(0))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
                         selected = false,
                         onClick = { state.value = false }
                     )
-                    Text(current_quiz.getCurrentQuestion().getVariant(1))
+                    Text(current_quiz.getQuestion(question_number).getVariant(1))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
                         selected = false,
                         onClick = { state.value = false }
                     )
-                    Text(current_quiz.getCurrentQuestion().getVariant(2))
+                    Text(current_quiz.getQuestion(question_number).getVariant(2))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
                         selected = false,
                         onClick = { state.value = false }
                     )
-                    Text(current_quiz.getCurrentQuestion().getVariant(3))
+                    Text(current_quiz.getQuestion(question_number).getVariant(3))
                 }
             }
-            Button(onClick = {}, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Text("Далее")
+            if (question_number != 3) {
+                Button(
+                    onClick = { question_number += 1 },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Text("Далее")
+                }
+            } else {
+                Button(onClick = {}, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                    Text("Завершить")
+                }
             }
         }
         Text("Вернуться к предыдущим вопросам нельзя", color = Color.White)

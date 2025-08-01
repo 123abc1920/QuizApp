@@ -11,14 +11,13 @@ class Quiz {
         current_question = 0
     }
 
-    fun getCurrentQuestion(): Question {
-        var _number = current_question
+    fun getQuestion(_number: Int): Question {
         current_question += 1
         return questions[_number]
     }
 
     fun isEnded(): Boolean {
-        if (current_question >= 5 || current_question < 0) {
+        if (current_question >= 3 || current_question < 0) {
             return true
         } else {
             return false
