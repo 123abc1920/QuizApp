@@ -42,14 +42,24 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.quizapp.presenter.*
-//https://opentdb.com/api.php?amount=5&type=multiple
-enum class ScreenStatus {
-    HELLO, QUIZ, END
-}
+
+lateinit var startQuiz: () -> Unit
+lateinit var startLoad: () -> Unit
+lateinit var startHello: () -> Unit
 
 @Composable
 fun MainScreen(navController: NavController) {
     var status by remember { mutableStateOf(ScreenStatus.HELLO) }
+    startQuiz = {
+        status = ScreenStatus.QUIZ
+    }
+    startHello = {
+        status =
+            ScreenStatus.HELLO
+    }
+    startLoad = {
+        status = ScreenStatus.LOAD
+    }
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -60,15 +70,17 @@ fun MainScreen(navController: NavController) {
             .padding(25.dp)
     ) {
         if (status == ScreenStatus.QUIZ) {
-            QuizScreen(startHello = { status = ScreenStatus.HELLO })
-        } else {
-            HelloScreen(onStartQuiz = { status = ScreenStatus.QUIZ })
+            QuizScreen()
+        } else if (status == ScreenStatus.HELLO) {
+            HelloScreen()
+        } else if (status == ScreenStatus.LOAD) {
+            LoadScreen()
         }
     }
 }
 
 @Composable
-private fun EndScreen(startHello: () -> Unit) {
+private fun EndScreen() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -112,10 +124,19 @@ private fun EndScreen(startHello: () -> Unit) {
     }
 }
 
+@Composable
+private fun LoadScreen() {
+    loadQuiz(startHello, startQuiz)
+    Text(
+        text = "DAILY QUIZ",
+        color = com.example.quizapp.view.theme.White,
+        fontSize = 40.sp,
+        fontWeight = FontWeight.Black,
+    )
+}
 
 @Composable
-private fun QuizScreen(startHello: () -> Unit) {
-    getQuizBody()
+private fun QuizScreen() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
@@ -125,7 +146,9 @@ private fun QuizScreen(startHello: () -> Unit) {
             horizontalArrangement = Arrangement.Start
         ) {
             IconButton(
-                onClick = startHello
+                onClick = {
+                    startHello
+                }
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = com.example.quizapp.R.drawable.arrow_back_icon),
@@ -156,7 +179,7 @@ private fun QuizScreen(startHello: () -> Unit) {
                 textAlign = TextAlign.Center
             )
             Text(
-                "Как переводится",
+                current_quiz.getCurrentQuestion().getQuestion(),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
@@ -171,28 +194,28 @@ private fun QuizScreen(startHello: () -> Unit) {
                         selected = false,
                         onClick = { state.value = false }
                     )
-                    Text("Btn1")
+                    Text(current_quiz.getCurrentQuestion().getVariant(0))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
                         selected = false,
                         onClick = { state.value = false }
                     )
-                    Text("Btn2")
+                    Text(current_quiz.getCurrentQuestion().getVariant(1))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
                         selected = false,
                         onClick = { state.value = false }
                     )
-                    Text("Btn3")
+                    Text(current_quiz.getCurrentQuestion().getVariant(2))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
                         selected = false,
                         onClick = { state.value = false }
                     )
-                    Text("Btn4")
+                    Text(current_quiz.getCurrentQuestion().getVariant(3))
                 }
             }
             Button(onClick = {}, modifier = Modifier.align(Alignment.CenterHorizontally)) {
@@ -204,7 +227,7 @@ private fun QuizScreen(startHello: () -> Unit) {
 }
 
 @Composable
-private fun HelloScreen(onStartQuiz: () -> Unit) {
+private fun HelloScreen() {
     Button(modifier = Modifier.background(Color.White), onClick = {}) {
         Text("История", color = Color.Black)
     }
@@ -231,7 +254,7 @@ private fun HelloScreen(onStartQuiz: () -> Unit) {
             Text(text = "Добро пожаловать в Daily Quiz!")
             Button(
                 modifier = Modifier.background(com.example.quizapp.view.theme.Purple),
-                onClick = onStartQuiz
+                onClick = startLoad
             ) {
                 Text("Начать тест", color = Color.White)
             }

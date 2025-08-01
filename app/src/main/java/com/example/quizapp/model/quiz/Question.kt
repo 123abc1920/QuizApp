@@ -2,18 +2,31 @@ package com.example.quizapp.model.quiz
 
 class Question {
     private var question: String
-        get() {
-            return question
-        }
-        set(value) {}
+    fun getQuestion(): String {
+        return question
+    }
 
-    private var variants: Array<String>
+    private var variants: MutableList<String>
+    fun getVariant(_number: Int): String {
+        return variants[_number]
+    }
+
+    private var correct: String
+
+    constructor(_question: String, _variants: MutableList<String>, _correct: String) {
+        question = _question
+        variants = _variants
+        correct = _correct
+    }
+
+    private var isCorrect: Boolean = false
         get() {
-            return variants
+            return isCorrect
         }
 
-    constructor(_question: String, _variants: Array<String>){
-        question=_question
-        variants=_variants
+    fun answer(_answer: String) {
+        if (_answer.equals(correct)) {
+            isCorrect = true
+        }
     }
 }

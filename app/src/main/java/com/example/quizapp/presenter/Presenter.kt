@@ -1,20 +1,29 @@
 package com.example.quizapp.presenter
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import com.example.quizapp.model.api.ApiService
 import com.example.quizapp.model.api.GetData
 import com.example.quizapp.model.api.QuizResponse
-import com.example.quizapp.model.api.RetrofitClient
+import com.example.quizapp.model.quiz.Question
+import com.example.quizapp.model.quiz.Quiz
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 lateinit var service: ApiService
 
-fun getQuizBody() {
-    service= GetData.service
+lateinit var current_quiz: Quiz
+
+enum class ScreenStatus {
+    HELLO, LOAD, QUIZ, END
+}
+
+fun loadQuiz(startHello: () -> Unit, startQuiz: () -> Unit) {
+    service = GetData.service
 
     service.getQuiz().enqueue(object : Callback<QuizResponse> {
 
@@ -25,8 +34,23 @@ fun getQuizBody() {
             if (response.isSuccessful) {
                 val quizResponse = response.body()
                 quizResponse?.let { data ->
-                    Log.d("Quiz", response.code().toString())
-                    Log.d("Quiz", data.toString())
+                    var questions: MutableList<Question> = emptyList<Question>().toMutableList()
+                    data.results?.forEach { quizData ->
+                        var _varinants = emptyList<String>().toMutableList()
+                        _varinants.add(quizData.correctAnswer.toString())
+                        quizData.incorrectAnswers?.forEach { el ->
+                            _varinants.add(el.toString())
+                        }
+                        questions.add(
+                            Question(
+                                quizData.question.toString(),
+                                _varinants,
+                                quizData.correctAnswer.toString()
+                            )
+                        )
+                    }
+                    current_quiz = Quiz(questions)
+                    startQuiz()
                 }
             } else {
                 Log.d("Quiz", "Response error: ${response.code()}")
@@ -39,6 +63,7 @@ fun getQuizBody() {
         ) {
             Log.d("Quiz", "fail")
             Log.d("Quiz", t.toString())
+            startHello()
         }
     })
 }

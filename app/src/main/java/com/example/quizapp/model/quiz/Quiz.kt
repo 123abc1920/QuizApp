@@ -1,13 +1,27 @@
 package com.example.quizapp.model.quiz
 
-class Quiz {
-    private var questions: Array<Question>
+import android.util.Log
 
-    constructor(_questions: Array<Question>){
-        questions=_questions
+class Quiz {
+    private var questions: MutableList<Question>
+    private var current_question: Int = 0
+
+    constructor(_questions: MutableList<Question>) {
+        questions = _questions
+        current_question = 0
     }
 
-    fun getQuestion(_number: Int): Question {
+    fun getCurrentQuestion(): Question {
+        var _number = current_question
+        current_question += 1
         return questions[_number]
+    }
+
+    fun isEnded(): Boolean {
+        if (current_question >= 5 || current_question < 0) {
+            return true
+        } else {
+            return false
+        }
     }
 }
