@@ -1,7 +1,5 @@
 package com.example.quizapp.model.quiz
 
-import android.util.Log
-
 class Quiz {
     private var questions: MutableList<Question>
     private var current_question: Int = 0
@@ -16,11 +14,19 @@ class Quiz {
         return questions[_number]
     }
 
-    fun isEnded(): Boolean {
-        if (current_question >= 3 || current_question < 0) {
-            return true
-        } else {
-            return false
+    fun getResult(): QuizResult {
+        var rate: Int = 0
+        questions.forEach { question ->
+            if (question.getIsCorrect()) {
+                rate += 1
+            }
+        }
+        return QuizResult(rate)
+    }
+
+    fun clear() {
+        questions.forEach { question ->
+            question.clear()
         }
     }
 }

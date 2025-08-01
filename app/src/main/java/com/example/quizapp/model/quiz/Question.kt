@@ -20,13 +20,17 @@ class Question {
     }
 
     private var isCorrect: Boolean = false
-        get() {
-            return isCorrect
-        }
+    fun getIsCorrect(): Boolean {
+        return isCorrect
+    }
 
     fun answer(_answer: Int) {
         if (variants[_answer].equals(correct)) {
             isCorrect = true
         }
+    }
+
+    fun clear() {
+        isCorrect = false
     }
 }
