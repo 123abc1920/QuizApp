@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-
+//https://opentdb.com/api.php?amount=5&type=multiple
 enum class ScreenStatus {
     HELLO, QUIZ, END
 }
