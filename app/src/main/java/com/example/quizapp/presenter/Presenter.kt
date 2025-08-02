@@ -13,14 +13,24 @@ import com.example.quizapp.model.quiz.Question
 import com.example.quizapp.model.quiz.Quiz
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.style.Hyphens
+import com.example.quizapp.model.quiz.History
+import com.example.quizapp.view.views.HistoryScreen
 
 lateinit var service: ApiService
 
 lateinit var current_quiz: Quiz
+var history: History = History()
 
 enum class ScreenStatus {
     HELLO, LOAD, QUIZ, END
 }
+
+enum class HistoryScreenStatus {
+    EMPTY, SHOW
+}
+
+var historyStatus = HistoryScreenStatus.EMPTY
 
 fun loadQuiz(startHello: () -> Unit, startQuiz: () -> Unit) {
     service = GetData.service
@@ -50,6 +60,7 @@ fun loadQuiz(startHello: () -> Unit, startQuiz: () -> Unit) {
                         )
                     }
                     current_quiz = Quiz(questions)
+                    historyStatus = HistoryScreenStatus.SHOW
                     startQuiz()
                 }
             } else {

@@ -1,6 +1,5 @@
 package com.example.quizapp.view.views
 
-import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,8 +40,10 @@ lateinit var startLoad: () -> Unit
 lateinit var startHello: () -> Unit
 lateinit var startEnd: () -> Unit
 
+private lateinit var navController: NavController
+
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen(_navController: NavController) {
     var status by remember { mutableStateOf(ScreenStatus.HELLO) }
     startQuiz = {
         status = ScreenStatus.QUIZ
@@ -58,6 +58,7 @@ fun MainScreen(navController: NavController) {
     startEnd = {
         status = ScreenStatus.END
     }
+    navController = _navController
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -83,6 +84,7 @@ fun MainScreen(navController: NavController) {
 @Composable
 private fun EndScreen() {
     var quiz_result: QuizResult = current_quiz.getResult()
+    history.add(current_quiz)
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -247,13 +249,15 @@ private fun QuizScreen() {
                 }
             }
         }
-        Text("Вернуться к предыдущим вопросам нельзя", color = Color.White)
+        Text("Вернуться к предыдущим вопросам нельзя", color = Color.White, fontSize = 10.sp)
     }
 }
 
 @Composable
 private fun HelloScreen() {
-    Button(modifier = Modifier.background(Color.White), onClick = {}) {
+    Button(
+        modifier = Modifier.background(Color.White),
+        onClick = { navController.navigate("history") }) {
         Text("История", color = Color.Black)
     }
     Column(
