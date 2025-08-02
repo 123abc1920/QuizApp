@@ -29,7 +29,6 @@ class QuizResult {
         rate = _rate
         text = textArray[rate]
         subText = subTextArray[rate]
-        Log.d("Quiz", rate.toString())
     }
 
     fun getRate(): Int {

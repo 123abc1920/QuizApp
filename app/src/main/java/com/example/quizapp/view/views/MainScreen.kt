@@ -1,5 +1,6 @@
 package com.example.quizapp.view.views
 
+import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +30,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -76,6 +79,7 @@ fun MainScreen(navController: NavController) {
     }
 }
 
+@Preview
 @Composable
 private fun EndScreen() {
     var quiz_result: QuizResult = current_quiz.getResult()
@@ -83,7 +87,7 @@ private fun EndScreen() {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Результаты")
+        Text("Результаты", fontSize = 30.sp, color = Color.White, fontWeight = FontWeight.Bold)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -109,8 +113,12 @@ private fun EndScreen() {
                     i++
                 }
             }
-            Text(quiz_result.getRate().toString() + " из 5")
-            Text(quiz_result.getText())
+            Text(
+                quiz_result.getRate().toString() + " из 5",
+                color = Color.Yellow,
+                fontWeight = FontWeight.Bold
+            )
+            Text(quiz_result.getText(), fontSize = 30.sp, fontWeight = FontWeight.Bold)
             Text(quiz_result.getSubText())
             Button(onClick = startHello) {
                 Text("Начать заново")
@@ -133,7 +141,6 @@ private fun LoadScreen() {
 @Composable
 private fun QuizScreen() {
     var question_number by remember { mutableStateOf(0) }
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
@@ -216,7 +223,7 @@ private fun QuizScreen() {
                     Text(current_quiz.getQuestion(question_number).getVariant(3))
                 }
             }
-            if (question_number != 3) {
+            if (question_number != 4) {
                 Button(
                     onClick = {
                         if (state.value >= 0 && state.value <= 3) {
