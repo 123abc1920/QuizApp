@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -61,12 +62,13 @@ fun HistoryScreen(_navController: NavController) {
 @Composable
 private fun NoQuizScreen() {
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .background(Color.White)
             .wrapContentHeight()
             .fillMaxWidth()
     ) {
-        Text("Вы еще не проходили ни одной викторины")
+        Text("Вы еще не проходили ни одной викторины", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
         Button(onClick = { navController.navigate("home") }) {
             Text("Начать викторину", fontWeight = FontWeight.Bold)
         }
@@ -87,7 +89,9 @@ private fun QuizScreen() {
     ) {
         var i = 0;
         repeat(history.getSize()) {
-            Column(modifier = Modifier.background(Color.White)) {
+            Column(
+                modifier = Modifier.background(Color.White)
+            ) {
                 Row {
                     Text("Quiz " + i, fontSize = 20.sp)
                     var j = 0

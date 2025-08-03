@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.RadioButton
@@ -118,10 +119,12 @@ private fun EndScreen() {
             Text(
                 quiz_result.getRate().toString() + " из 5",
                 color = Color.Yellow,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
-            Text(quiz_result.getText(), fontSize = 30.sp, fontWeight = FontWeight.Bold)
-            Text(quiz_result.getSubText())
+            Text(quiz_result.getText(), fontSize = 30.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+            Text(quiz_result.getSubText(), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
             Button(onClick = startHello) {
                 Text("Начать заново")
             }
