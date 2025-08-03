@@ -7,7 +7,7 @@
 1. Получение данных по Api с Retrofit
 1. Применить MVP архитектуру
 
-Видео: [schoolresult.mp3](VIDEO/)
+Видео: [schoolresult.mp4](VIDEO/)
 
 ### Model
 
